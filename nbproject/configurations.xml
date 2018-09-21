@@ -12,7 +12,18 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>Makefile</itemPath>
+      <itemPath>README.md</itemPath>
+      <itemPath>README_cpp</itemPath>
+      <itemPath>constants.hpp</itemPath>
+      <itemPath>deadline.hpp</itemPath>
+      <itemPath>gamestate.cpp</itemPath>
+      <itemPath>gamestate.hpp</itemPath>
       <itemPath>main.cpp</itemPath>
+      <itemPath>mainOld.cpp</itemPath>
+      <itemPath>move.hpp</itemPath>
+      <itemPath>player.cpp</itemPath>
+      <itemPath>player.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -36,7 +47,29 @@
       </toolsSet>
       <compileType>
       </compileType>
+      <item path="Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="README.md" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="README_cpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="constants.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="deadline.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="gamestate.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="gamestate.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="mainOld.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="move.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="player.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="player.hpp" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -59,7 +92,29 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="README.md" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="README_cpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="constants.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="deadline.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="gamestate.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="gamestate.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="mainOld.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="move.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="player.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="player.hpp" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
