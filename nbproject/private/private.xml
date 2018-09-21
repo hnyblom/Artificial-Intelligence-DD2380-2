@@ -4,4 +4,17 @@
         <activeConfTypeElem>1</activeConfTypeElem>
         <activeConfIndexElem>0</activeConfIndexElem>
     </data>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/hanna/NetBeansProjects/AI2/player.cpp</file>
+            <file>file:/home/hanna/NetBeansProjects/AI2/main.cpp</file>
+            <file>file:/home/hanna/NetBeansProjects/AI2/gamestate.hpp</file>
+            <file>file:/home/hanna/NetBeansProjects/AI2/move.hpp</file>
+            <file>file:/home/hanna/NetBeansProjects/AI2/deadline.hpp</file>
+            <file>file:/home/hanna/NetBeansProjects/AI2/gamestate.cpp</file>
+            <file>file:/home/hanna/NetBeansProjects/AI2/constants.hpp</file>
+            <file>file:/home/hanna/NetBeansProjects/AI2/player.hpp</file>
+        </group>
+    </open-files>
 </project-private>
