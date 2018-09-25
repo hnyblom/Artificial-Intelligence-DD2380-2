@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm> 
 #include <limits>
+#include <climits>
 #include <cstdint>
 
 namespace TICTACTOE {
@@ -74,12 +75,27 @@ int isDiag(int i, int j){
     return res;
 }
 
-vector<GameState> mu(const GameState &pState){
+vector<GameState> mu(bool player, const GameState &pState){
     //cerr<<"\n------mu----\n";
     std::vector<GameState> lNextStates;
+    std::vector<GameState> lNextStatesX;
+    std::vector<GameState> lNextStatesO;
     pState.findPossibleMoves(lNextStates);
+    for(int i=0;i<lNextStates.size();++i){
+        if(lNextStates[i].getNextPlayer()==CELL_X){
+            lNextStatesO.push_back(lNextStates[i]);
+        }else if(lNextStates[i].getNextPlayer()==CELL_O){
+            lNextStatesX.push_back(lNextStates[i]);
+        }
+    }
+    if(player){
+      return lNextStatesX;  
+    }else{
+        return lNextStatesO;
+    }
     
-    return lNextStates;
+    
+    
     
 }
 int rowDanger(const GameState &pState, int i, int j, int cell){
@@ -167,11 +183,17 @@ int gamma(bool player, const GameState &pState){
     //Possible winning opportunities
     //cerr<<"\n------gamma----\n";
     vector<int> xRows(4);
+    vector<int> xNARows(4);
     vector<int> xCols(4);
+    vector<int> xNACols(4);
     vector<int> xDi(2);
+    vector<int> xNADi(2);
     vector<int> yRows(4);
+    vector<int> yNARows(4);
     vector<int> yCols(4);
+    vector<int> yNACols(4);
     vector<int> yDi(2);
+    vector<int> yNADi(2);
     vector<int> xScoreRows(4);
     vector<int> yScoreRows(4);
     vector<int> xScoreCols(4);
@@ -224,12 +246,15 @@ int gamma(bool player, const GameState &pState){
                   --yColChances;
                   //cerr<<"yColChances: "<<yColChances<<"\n";
                 }
+                xNARows[i]+=1;
+                xNACols[j]+=1;
                              
                 int diT = isDiag(i, j);
                 if(diDanger(pState,i,j,CELL_O)){
                     xStopDiDanger[diT]=1;
                 }
                 if(diT!=2){
+                    xNADi[diT]+=1;
                     if(yDi[diT]!=0){
                         yDi[diT]=0;
                         --yDiChances;
@@ -252,12 +277,14 @@ int gamma(bool player, const GameState &pState){
                    xCols[j]=0;
                     --xColChances; 
                 }
-                
+                yNARows[i]+=1;
+                yNACols[j]+=1;
                 int diT = isDiag(i, j);
                 if(diDanger(pState,i,j,CELL_X)){
                     yStopDiDanger[diT]=1;
                 }
                 if(diT!=2){
+                    yNADi[diT]+=1;
                     if(xDi[diT]!=0){
                         xDi[diT]=0;
                         --xDiChances;
@@ -336,7 +363,7 @@ int gamma(bool player, const GameState &pState){
         
         
         //cerr<<" "<<rx<<"  "<<cx<<"  "<<"  "<<ry<<"  "<<cy<<"\n";
-        if(!player){
+        if(player){
             if(rx==1){good+=0;}
             if(cx==1){good+=0;}
             if(rx==2){good+=5;}
@@ -356,7 +383,7 @@ int gamma(bool player, const GameState &pState){
             if(cy==3){bad+=100;}
             if(ry==4){bad+=1000;}
             if(cy==4){bad+=1000;}
-        }else if(player){
+        }else if(!player){
             if(rx==1){bad+=0;}
             if(cx==1){bad+=0;}
             if(rx==2){bad+=50;}
@@ -384,7 +411,7 @@ int gamma(bool player, const GameState &pState){
         int dxd = xStopDiDanger[l];
         int dyd = yStopDiDanger[l];
         //Player X
-        if(!player){
+        if(player){
             if(dx==1){good+=1;}
             if(dx==2){good+=5;}
             if(dx==3){good+=10;}
@@ -397,7 +424,7 @@ int gamma(bool player, const GameState &pState){
             if(dy==3){bad+=100;}
             if(dy==4){bad+=1000;}
         //Player O
-        }else if(player){
+        }else if(!player){
             if(dx==1){bad+=10;}
             if(dx==2){bad+=50;}
             if(dx==3){bad+=100;}
@@ -411,40 +438,55 @@ int gamma(bool player, const GameState &pState){
         }       
     }
     int chancesLeft=0;
-    if(!player){
+    if(player){
         chancesLeft = xRowChances+xColChances+xDiChances;
-    }else if(player){
+    }else if(!player){
         chancesLeft = yRowChances+yColChances+yDiChances;
     }
 
-    //cerr<<"\n good \n";
-    //cerr<<good;
+   // cerr<<"\n good - bad \n";
+    //cerr<<good-bad<<"\n";
     //cerr<<"\n chances \n";
     //cerr<<chancesLeft<<"\n";
-    return good-bad+(chancesLeft*50);
+    
+    //19 kattis
+//    if(pState.isXWin()){
+//        return 2;
+//    }
+//    else if(pState.isOWin()){
+//        return 0;
+//    }
+//    else if(pState.isDraw()){
+//        return 1;
+//    }
+    int sum;
+    for(int i=0;i<4;++i){
+        sum+=xNARows[i]+xNACols[i];
+    }
+    for(int i=0;i<2;++i){
+        sum+=xNADi[i];
+    }
+    //18 i kattis
+    return sum;
+    //18 i kattis
+    //return good-bad;
+            //18 i kattis
+            //+(chancesLeft*50);
     }
 
-//Spelare A=1, Spelare B=0
-int minMax(const GameState &pState, bool playerBool, int depth, int alfa, int beta){
-    //cerr<<"\n------minMax----\n";
-    
-    
-    //cerr<<"\n----child:"<<childCount<<"\n";
-    double bestPossible;
+int minMax(const GameState &pState, bool playerBool, int alfa, int beta){
     int v;
-    if(depth==0||mu(pState).size()==0){
+    if(mu(playerBool, pState).size()==0){
+        //cerr<<"\ngamma\n";
         v= (gamma(playerBool, pState));
-        //cerr<<"gamma: "<<v<<" \n";
-        //cerr<<"player: "<<player<<" \n";
+        
     }else if(playerBool){
         //X-player
-        v = INT8_MIN;//Blev problems med -INFINITY
-        vector<GameState> States1 = mu(pState);
+        v = INT_MIN;//Blev problems med -INFINITY
+        vector<GameState> States1 = mu(playerBool, pState);
         for(int i=0;i<States1.size();++i){
             GameState child = States1[i];
-
-            v = max(v,minMax(child, false, depth-1, alfa, beta));
-            //cerr<<"max; "<<v<<" \n";
+            v = max(v,minMax(child, false, alfa, beta));
             alfa = max(alfa, v);
             if(beta<=alfa){
                ++pruning;
@@ -453,11 +495,11 @@ int minMax(const GameState &pState, bool playerBool, int depth, int alfa, int be
         }
     //O-player
     }else{
-        bestPossible = INT8_MAX;
-        vector<GameState> States2 = mu(pState);
+        v = INT_MAX;
+        vector<GameState> States2 = mu(playerBool, pState);
         for(int j=0;j<States2.size();++j){
             GameState child = States2[j];
-            v = min(v, minMax(child, true, depth-1, alfa, beta));
+            v = min(v, minMax(child, true, alfa, beta));
             //cerr<<"min; "<<v<<" \n";
             beta = min(beta, v);
             if(beta<=alfa){
@@ -488,7 +530,7 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
 //        cerr<<"\n last player was 0 \n";
 //    }
 //    cerr<<"\n player after: "<<player<<"\n";
-    vector<GameState> lNextStates = mu(pState);
+    vector<GameState> lNextStates = mu(true, pState);
     if (lNextStates.size() == 0) return GameState(pState, Move());
 
     /*
@@ -499,7 +541,7 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
     int max = 0;
     for(int i=0;i<lNextStates.size();++i){
         
-        int newMax = minMax(lNextStates[i], true, INT8_MAX, INT8_MAX, INT8_MIN);
+        int newMax = minMax(lNextStates[i], true, INT_MIN, INT_MAX);
         if(newMax>max){
             max = i;
         }
