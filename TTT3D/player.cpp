@@ -110,116 +110,119 @@ int gamma(bool player, const GameState &pState){
     //Calculate value of state
     //Possible winning opportunities
     //cerr<<"\n------gamma----\n";
-    vector<vector<int>> xRows(4, vector<int>(4));
-    vector<vector<int>> xNARows(4, vector<int>(4));
-    vector<vector<int>> xCols(4, vector<int>(4));
-    vector<vector<int>> xNACols(4, vector<int>(4));
-    vector<vector<int>> xDi(2, vector<int>(2));
-    vector<vector<int>> xNADi(2, vector<int>(2));
-    vector<vector<int>> yRows(4, vector<int>(4));
-    vector<vector<int>> yNARows(4, vector<int>(4));
-    vector<vector<int>> yCols(4, vector<int>(4));
-    vector<vector<int>> yNACols(4, vector<int>(4));
-    vector<vector<int>> yDi(2, vector<int>(2));
-    vector<vector<int>> yNADi(2, vector<int>(2));
-    vector<vector<int>> xScoreRows(4, vector<int>(4));
-    vector<vector<int>> yScoreRows(4, vector<int>(4));
-    vector<vector<int>> xScoreCols(4, vector<int>(4));
-    vector<vector<int>> yScoreCols(4, vector<int>(4));
-    vector<vector<int>> xScoreDi(2, vector<int>(2));
-    vector<vector<int>> yScoreDi(2, vector<int>(2));
-    vector<vector<int>> xStopRowDanger(4, vector<int>(4));
-    vector<vector<int>> xStopColDanger(4, vector<int>(4));
-    vector<vector<int>> yStopRowDanger(4, vector<int>(4));
-    vector<vector<int>> yStopColDanger(4, vector<int>(4));
-    vector<vector<int>> xStopDiDanger(2, vector<int>(2));
-    vector<vector<int>> yStopDiDanger(2, vector<int>(2));
+    vector<vector<int>> xRows(6, vector<int>(4));
+    vector<vector<int>> xNARows(6, vector<int>(4));
+    vector<vector<int>> xCols(6, vector<int>(4));
+    vector<vector<int>> xNACols(6, vector<int>(4));
+    vector<vector<int>> xDi(6, vector<int>(2));
+    vector<vector<int>> xNADi(6, vector<int>(2));
+    vector<vector<int>> yRows(6, vector<int>(4));
+    vector<vector<int>> yNARows(6, vector<int>(4));
+    vector<vector<int>> yCols(6, vector<int>(4));
+    vector<vector<int>> yNACols(6, vector<int>(4));
+    vector<vector<int>> yDi(6, vector<int>(2));
+    vector<vector<int>> yNADi(6, vector<int>(2));
+    vector<vector<int>> xScoreRows(6, vector<int>(4));
+    vector<vector<int>> yScoreRows(6, vector<int>(4));
+    vector<vector<int>> xScoreCols(6, vector<int>(4));
+    vector<vector<int>> yScoreCols(6, vector<int>(4));
+    vector<vector<int>> xScoreDi(6, vector<int>(2));
+    vector<vector<int>> yScoreDi(6, vector<int>(2));
+    vector<vector<int>> xStopRowDanger(6, vector<int>(4));
+    vector<vector<int>> xStopColDanger(6, vector<int>(4));
+    vector<vector<int>> yStopRowDanger(6, vector<int>(4));
+    vector<vector<int>> yStopColDanger(6, vector<int>(4));
+    vector<vector<int>> xStopDiDanger(6, vector<int>(2));
+    vector<vector<int>> yStopDiDanger(6, vector<int>(2));
 
-    int xRowChances =16;
-    int xColChances =16;
-    int xDiChances =8;
-    int yRowChances =16;
-    int yColChances =16;
-    int yDiChances =8;
+    int xRowChances =24;
+    int xColChances =24;
+    int xDiChances =12;
+    int yRowChances =24;
+    int yColChances =24;
+    int yDiChances =12;
     
-    for(int i=0; i<4; ++i){
+    for(int l=0; l<6; ++l){
         for(int j=0;j<4;++j){
-            xRows[i][j]=1;
-            xCols[i][j]=1;  
+            xRows[l][j]=1;
+            xCols[l][j]=1;  
 
-            yRows[i][j]=1;
-            yCols[i][j]=1; 
+            yRows[l][j]=1;
+            yCols[l][j]=1; 
         }       
     }
-    for (int i=0;i<2;++i){
+    for (int l=0;l<6;++l){
         for(int j=0;j<2;++j){
-            xDi[i][j]=1;
-            yDi[i][j]=1;
+            xDi[l][j]=1;
+            yDi[l][j]=1;
         }
     }
     
     //cerr<<"yRowChances: "<<yRowChances<<"\n";
-    for(int l=0;l<4;++l){
+    for(int l=0;l<6;++l){
         for(int i=0;i<4;++i){
-            for(int j=0;j<4;++j){            
+            for(int j=0;j<4;++j){ 
+                cerr<<"\nChecking chances \n";
                 if(pState.at(i,j,l)==CELL_X){
+                    cerr<<"\n chances X \n";
                     if(rowDanger(pState, i, j, l, CELL_O)){
-                        xStopRowDanger[i][l]=1;
+                        xStopRowDanger[l][i]=1;
                     }
                     if(colDanger(pState, i, j, l, CELL_O)){
-                        xStopColDanger[i][l]=1;
+                        xStopColDanger[l][i]=1;
                     }
-                    if(yRows[i][l]!=0){
-                       yRows[i][l]=0;
+                    if(yRows[l][i]!=0){
+                       yRows[l][i]=0;
                        --yRowChances;
                        //cerr<<"yRowChances: "<<yRowChances<<"\n";
                     }
-                    if(yCols[j][l]!=0){
-                      yCols[j][l]=0;
+                    if(yCols[l][j]!=0){
+                      yCols[l][j]=0;
                       --yColChances;
                       //cerr<<"yColChances: "<<yColChances<<"\n";
                     }
-                    xNARows[i][l]+=1;
-                    xNACols[j][l]+=1;
+                    xNARows[l][i]+=1;
+                    xNACols[l][j]+=1;
 
                     int diT = isDiag(i, j);
                     if(diDanger(pState,i,j,l,CELL_O)){
-                        xStopDiDanger[diT][l]=1;
+                        xStopDiDanger[l][diT]=1;
                     }
                     if(diT!=2){
-                        xNADi[diT][l]+=1;
-                        if(yDi[diT][l]!=0){
-                            yDi[diT][l]=0;
+                        xNADi[l][diT]+=1;
+                        if(yDi[l][diT]!=0){
+                            yDi[l][diT]=0;
                             --yDiChances;
                             //cerr<<"yDiChances: "<<yDiChances<<"\n";
                         }
                    }
                 }
                 if(pState.at(i,j,l)==CELL_O){
+                    cerr<<"\n chances O \n";
                     if(rowDanger(pState, i, j, l, CELL_X)){
-                        yStopRowDanger[i][l]=1;
+                        yStopRowDanger[l][i]=1;
                     }
                     if(colDanger(pState, i, j, l, CELL_X)){
-                        yStopColDanger[i][l]=1;
+                        yStopColDanger[l][i]=1;
                     }
-                    if(xRows[i][l]!=0){
-                        xRows[i][l]=0;
+                    if(xRows[l][i]!=0){
+                        xRows[l][i]=0;
                         --xRowChances;
                     }
-                    if(xCols[j][l]!=0){
-                       xCols[j][l]=0;
+                    if(xCols[l][j]!=0){
+                       xCols[l][j]=0;
                         --xColChances; 
                     }
-                    yNARows[i][l]+=1;
-                    yNACols[j][l]+=1;
+                    yNARows[l][i]+=1;
+                    yNACols[l][j]+=1;
                     int diT = isDiag(i, j);
                     if(diDanger(pState,i,j,l,CELL_X)){
-                        yStopDiDanger[diT][l]=1;
+                        yStopDiDanger[l][diT]=1;
                     }
                     if(diT!=2){
-                        yNADi[diT][l]+=1;
-                        if(xDi[diT][l]!=0){
-                            xDi[diT][l]=0;
+                        yNADi[l][diT]+=1;
+                        if(xDi[l][diT]!=0){
+                            xDi[l][diT]=0;
                             --xDiChances;
                         }
                     }
@@ -228,29 +231,30 @@ int gamma(bool player, const GameState &pState){
         }
     }
     //Score how players are doing
-    for(int l=0;l<4;++l){
+    for(int l=0;l<6;++l){
         for(int i=0;i<4;++i){
-            for(int j=0;j<4;++j){          
+            for(int j=0;j<4;++j){
+                cerr<<"\n scoring \n";
                 if(pState.at(i,j,l)==CELL_X){     
                     //X ensam på rad/column
-                    if(xRows[i][l]!=0){xScoreRows[i][l]+=1;}
-                    if(xCols[j][l]!=0){xScoreCols[j][l]+=1;}
+                    if(xRows[i][l]!=0){xScoreRows[l][i]+=1;}
+                    if(xCols[j][l]!=0){xScoreCols[l][j]+=1;}
                     //Stoppa motståndare med 3 poäng
 
                     //X Ensam på diagonal
                     int diT = isDiag(i, j);
                     if(diT!=2){
-                        if(xDi[diT][l]!=0){xScoreDi[diT][l]+=1;}                   
+                        if(xDi[l][diT]!=0){xScoreDi[l][diT]+=1;}                   
                     }                            
                 }
                 if(pState.at(i,j,l)==CELL_O){
                     //Y ensam på rad/column
-                    if(yRows[i][l]!=0){yScoreRows[i][l]+=1;}
-                    if(yCols[j][l]!=0){yScoreCols[j][l]+=1;}
+                    if(yRows[l][i]!=0){yScoreRows[l][i]+=1;}
+                    if(yCols[l][j]!=0){yScoreCols[l][j]+=1;}
                     //Y ensam på rad/column
                     int diT = isDiag(i, j);
                     if(diT!=2){
-                        if(yDi[diT][l]!=0){yScoreDi[diT][l]+=1;}           
+                        if(yDi[l][diT]!=0){yScoreDi[l][diT]+=1;}           
                     }                 
                 }
             }
@@ -261,17 +265,17 @@ int gamma(bool player, const GameState &pState){
     int good =0;
     int bad =0;
     //cerr<<"\nrx, cx, ry, cy \n";
-    for(int l=0;l<4;++l){
+    for(int l=0;l<6;++l){
     for(int k=0;k<4;++k){
         //Score +1 bara om ensam på rad
-        int rx = xScoreRows[k][l];
-        int cx = xScoreCols[k][l];              
-        int ry = yScoreRows[k][l];
-        int cy = yScoreCols[k][l];
-        int rxd = xStopRowDanger[k][l];
-        int cxd = xStopColDanger[k][l];
-        int ryd = yStopRowDanger[k][l];
-        int cyd = yStopColDanger[k][l];
+        int rx = xScoreRows[l][k];
+        int cx = xScoreCols[l][k];              
+        int ry = yScoreRows[l][k];
+        int cy = yScoreCols[l][k];
+        int rxd = xStopRowDanger[l][k];
+        int cxd = xStopColDanger[l][k];
+        int ryd = yStopRowDanger[l][k];
+        int cyd = yStopColDanger[l][k];
         
         
         //cerr<<" "<<rx<<"  "<<cx<<"  "<<"  "<<ry<<"  "<<cy<<"\n";
@@ -319,10 +323,10 @@ int gamma(bool player, const GameState &pState){
     }
     for(int l=0;l<4;++l){
         for(int k=0;k<2;++k){
-            int dx = xScoreDi[k][l];       
-            int dy = yScoreDi[k][l];
-            int dxd = xStopDiDanger[k][l];
-            int dyd = yStopDiDanger[k][l];
+            int dx = xScoreDi[l][k];       
+            int dy = yScoreDi[l][k];
+            int dxd = xStopDiDanger[l][k];
+            int dyd = yStopDiDanger[l][k];
             //Player X
             if(player){
                 if(dx==1){good+=1;}
@@ -358,10 +362,10 @@ int gamma(bool player, const GameState &pState){
         chancesLeft = yRowChances+yColChances+yDiChances;
     }
 
-   // cerr<<"\n good - bad \n";
-    //cerr<<good-bad<<"\n";
-    //cerr<<"\n chances \n";
-    //cerr<<chancesLeft<<"\n";
+    cerr<<"\n good - bad \n";
+    cerr<<good-bad<<"\n";
+    cerr<<"\n chances \n";
+    cerr<<chancesLeft<<"\n";
     
     return good-bad+(chancesLeft*50);
 
