@@ -75,27 +75,15 @@ int isDiag(int i, int j){
     return res;
 }
 
-vector<GameState> mu(bool player, const GameState &pState){
+vector<GameState> mu(const GameState &pState){
     //cerr<<"\n------mu----\n";
     std::vector<GameState> lNextStates;
-    std::vector<GameState> lNextStatesX;
-    std::vector<GameState> lNextStatesO;
     pState.findPossibleMoves(lNextStates);
-    for(int i=0;i<lNextStates.size();++i){
-        if(lNextStates[i].getNextPlayer()==CELL_X){
-            lNextStatesO.push_back(lNextStates[i]);
-        }else if(lNextStates[i].getNextPlayer()==CELL_O){
-            lNextStatesX.push_back(lNextStates[i]);
-        }
-    }
-    if(player){
-      return lNextStatesX;  
-    }else{
-        return lNextStatesO;
-    }
+ 
+        
     
     
-    
+    return lNextStates;
     
 }
 int rowDanger(const GameState &pState, int i, int j, int cell){
@@ -466,7 +454,6 @@ int gamma(bool player, const GameState &pState){
     for(int i=0;i<2;++i){
         sum+=xNADi[i];
     }
-    //18 i kattis
     return sum;
     //18 i kattis
     //return good-bad;
@@ -475,15 +462,16 @@ int gamma(bool player, const GameState &pState){
     }
 
 int minMax(const GameState &pState, bool playerBool, int alfa, int beta){
+    //cerr<<"minmax: "<<" \n";
     int v;
-    if(mu(playerBool, pState).size()==0){
-        //cerr<<"\ngamma\n";
+    if(mu(pState).size()==0){
         v= (gamma(playerBool, pState));
-        
+        //cerr<<"gamma: "<<v<<" \n";
+        //cerr<<"player: "<<player<<" \n";
     }else if(playerBool){
         //X-player
         v = INT_MIN;//Blev problems med -INFINITY
-        vector<GameState> States1 = mu(playerBool, pState);
+        vector<GameState> States1 = mu(pState);
         for(int i=0;i<States1.size();++i){
             GameState child = States1[i];
             v = max(v,minMax(child, false, alfa, beta));
@@ -496,7 +484,7 @@ int minMax(const GameState &pState, bool playerBool, int alfa, int beta){
     //O-player
     }else{
         v = INT_MAX;
-        vector<GameState> States2 = mu(playerBool, pState);
+        vector<GameState> States2 = mu(pState);
         for(int j=0;j<States2.size();++j){
             GameState child = States2[j];
             v = min(v, minMax(child, true, alfa, beta));
@@ -530,7 +518,7 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
 //        cerr<<"\n last player was 0 \n";
 //    }
 //    cerr<<"\n player after: "<<player<<"\n";
-    vector<GameState> lNextStates = mu(true, pState);
+    vector<GameState> lNextStates = mu(pState);
     if (lNextStates.size() == 0) return GameState(pState, Move());
 
     /*
@@ -540,8 +528,8 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
     //return lNextStates[rand() % lNextStates.size()];
     int max = 0;
     for(int i=0;i<lNextStates.size();++i){
-        
-        int newMax = minMax(lNextStates[i], true, INT_MIN, INT_MAX);
+        //cerr<<"playNExt: "<<" \n";
+        int newMax = minMax(lNextStates[i], true, 0, 0);
         if(newMax>max){
             max = i;
         }

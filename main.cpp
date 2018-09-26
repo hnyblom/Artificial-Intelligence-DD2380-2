@@ -72,7 +72,6 @@ int main(int argc, char **argv)
         TICTACTOE::GameState output_state = player.play(input_state, deadline);
 
 		if (deadline < TICTACTOE::Deadline::now()) {
-                    std::cerr<<"\n------deadline expired-------\n";
 			exit(152);
 		}
 
@@ -94,15 +93,13 @@ int main(int argc, char **argv)
         if (verbose)
         {
             std::cerr << output_state.toMessage() << std::endl;
-            std::cerr << output_state.toString(input_state.getNextPlayer())<< std::endl;
-      
-                    
+            std::cerr << output_state.toString(input_state.getNextPlayer())    << std::endl;
         }
 
         // Send the next move
         std::string output_message = output_state.toMessage();
+        //std::cerr << "Sending: '" << output_message << "'"<< std::endl;
         std::cout << output_message << std::endl;
-
 
         // Quit if this is end of game
         if (output_state.getMove().isEOG())

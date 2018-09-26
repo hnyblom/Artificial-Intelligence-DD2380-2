@@ -340,7 +340,7 @@ public:
 	/// returns true if the game ended in draw
 	bool isDraw() const
 	{
-		//std::cerr << "gamestate send draw" << std::endl;
+		std::cerr << "gamestate send draw" << std::endl;
 		return mLastMove.isDraw();
 	}
 
