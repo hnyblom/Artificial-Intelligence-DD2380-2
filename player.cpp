@@ -170,267 +170,256 @@ int gamma(bool player, const GameState &pState){
     //Calculate value of state
     //Possible winning opportunities
     //cerr<<"\n------gamma----\n";
-    vector<int> xRows(4);
-    vector<int> xNARows(4);
-    vector<int> xCols(4);
-    vector<int> xNACols(4);
-    vector<int> xDi(2);
-    vector<int> xNADi(2);
-    vector<int> yRows(4);
-    vector<int> yNARows(4);
-    vector<int> yCols(4);
-    vector<int> yNACols(4);
-    vector<int> yDi(2);
-    vector<int> yNADi(2);
-    vector<int> xScoreRows(4);
-    vector<int> yScoreRows(4);
-    vector<int> xScoreCols(4);
-    vector<int> yScoreCols(4);
-    vector<int> xScoreDi(2);
-    vector<int> yScoreDi(2);
-    vector<int> xStopRowDanger(4);
-    vector<int> xStopColDanger(4);
-    vector<int> yStopRowDanger(4);
-    vector<int> yStopColDanger(4);
-    vector<int> xStopDiDanger(2);
-    vector<int> yStopDiDanger(2);
-
-    int xRowChances =4;
-    int xColChances =4;
-    int xDiChances =2;
-    int yRowChances =4;
-    int yColChances =4;
-    int yDiChances =2;
-    
-    for(int i=0; i<4; ++i){
-        xRows[i]=1;
-        xCols[i]=1;  
-
-        yRows[i]=1;
-        yCols[i]=1;
-    }
-    xDi[0]=1;
-    xDi[1]=1;
-    
-    yDi[0]=1;
-    yDi[1]=1;
-    //cerr<<"yRowChances: "<<yRowChances<<"\n";
-    for(int i=0;i<4;++i){
-        for(int j=0;j<4;++j){            
-            if(pState.at(i,j)==CELL_X){
-                if(rowDanger(pState, i, j, CELL_O)){
-                    xStopRowDanger[i]=1;
-                }
-                if(colDanger(pState, i, j, CELL_O)){
-                    xStopColDanger[i]=1;
-                }
-                if(yRows[i]!=0){
-                   yRows[i]=0;
-                   --yRowChances;
-                   //cerr<<"yRowChances: "<<yRowChances<<"\n";
-                }
-                if(yCols[j]!=0){
-                  yCols[j]=0;
-                  --yColChances;
-                  //cerr<<"yColChances: "<<yColChances<<"\n";
-                }
-                xNARows[i]+=1;
-                xNACols[j]+=1;
-                             
-                int diT = isDiag(i, j);
-                if(diDanger(pState,i,j,CELL_O)){
-                    xStopDiDanger[diT]=1;
-                }
-                if(diT!=2){
-                    xNADi[diT]+=1;
-                    if(yDi[diT]!=0){
-                        yDi[diT]=0;
-                        --yDiChances;
-                        //cerr<<"yDiChances: "<<yDiChances<<"\n";
-                    }
-               }
-            }
-            if(pState.at(i,j)==CELL_O){
-                if(rowDanger(pState, i, j, CELL_X)){
-                    yStopRowDanger[i]=1;
-                }
-                if(colDanger(pState, i, j, CELL_X)){
-                    yStopColDanger[i]=1;
-                }
-                if(xRows[i]!=0){
-                    xRows[i]=0;
-                    --xRowChances;
-                }
-                if(xCols[j]!=0){
-                   xCols[j]=0;
-                    --xColChances; 
-                }
-                yNARows[i]+=1;
-                yNACols[j]+=1;
-                int diT = isDiag(i, j);
-                if(diDanger(pState,i,j,CELL_X)){
-                    yStopDiDanger[diT]=1;
-                }
-                if(diT!=2){
-                    yNADi[diT]+=1;
-                    if(xDi[diT]!=0){
-                        xDi[diT]=0;
-                        --xDiChances;
-                    }
-                }
-            }
-        }
-    }
-    //Score how players are doing
-    for(int i=0;i<4;++i){
-        for(int j=0;j<4;++j){          
-            if(pState.at(i,j)==CELL_X){     
-                //X ensam på rad/column
-                if(xRows[i]!=0){xScoreRows[i]+=1;}
-                if(xCols[j]!=0){xScoreCols[j]+=1;}
-                //Stoppa motståndare med 3 poäng
-                
-                //X Ensam på diagonal
-                int diT = isDiag(i, j);
-                if(diT!=2){
-                    if(xDi[diT]!=0){xScoreDi[diT]+=1;}                   
-                }                            
-            }
-            if(pState.at(i,j)==CELL_O){
-                //Y ensam på rad/column
-                if(yRows[i]!=0){yScoreRows[i]+=1;}
-                if(yCols[j]!=0){yScoreCols[j]+=1;}
-                //Y ensam på rad/column
-                int diT = isDiag(i, j);
-                if(diT!=2){
-                    if(yDi[diT]!=0){yScoreDi[diT]+=1;}           
-                }                 
-            }
-        }
-    }
-//    cerr<<"\n xRows: \n";
-//    for(int i=0;i<4;++i){               
-//        cerr<<xRows[i]<<" ";        
-//    }
-//    cerr<<"\n xCols: \n";
-//    for(int i=0;i<4;++i){
-//        cerr<<xCols[i]<<" ";
-//    }
-//    cerr<<"\n yRows: \n";
-//    for(int i=0;i<4;++i){
-//        cerr<<yRows[i]<<" ";
-//    }
-//    cerr<<"\n yCols: \n";
-//    for(int i=0;i<4;++i){
-//        cerr<<yCols[i]<<" ";
-//    }
+//    vector<int> xRows(4);
+//    vector<int> xCols(4);
+//    vector<int> xDi(2);
+//    vector<int> yRows(4);
+//    vector<int> yCols(4);
+//    vector<int> yDi(2);
+//    vector<int> xScoreRows(4);
+//    vector<int> yScoreRows(4);
+//    vector<int> xScoreCols(4);
+//    vector<int> yScoreCols(4);
+//    vector<int> xScoreDi(2);
+//    vector<int> yScoreDi(2);
+//    vector<int> xStopRowDanger(4);
+//    vector<int> xStopColDanger(4);
+//    vector<int> yStopRowDanger(4);
+//    vector<int> yStopColDanger(4);
+//    vector<int> xStopDiDanger(2);
+//    vector<int> yStopDiDanger(2);
+//
+//    int xRowChances =4;
+//    int xColChances =4;
+//    int xDiChances =2;
+//    int yRowChances =4;
+//    int yColChances =4;
+//    int yDiChances =2;
 //    
-//    for(int i=0;i<2;++i){
-//        cerr<<"\n xDi: \n";
-//        cerr<<xDi[i]<<" ";     
+//    for(int i=0; i<4; ++i){
+//        xRows[i]=1;
+//        xCols[i]=1;  
+//
+//        yRows[i]=1;
+//        yCols[i]=1;
 //    }
-//    cerr<<"\n yDi: \n";
-//    for(int i=0;i<2;++i){
-//        cerr<<yDi[i]<<" ";  
+//    xDi[0]=1;
+//    xDi[1]=1;
+//    
+//    yDi[0]=1;
+//    yDi[1]=1;
+//    //cerr<<"yRowChances: "<<yRowChances<<"\n";
+//    for(int i=0;i<4;++i){
+//        for(int j=0;j<4;++j){            
+//            if(pState.at(i,j)==CELL_X){
+//                if(rowDanger(pState, i, j, CELL_O)){
+//                    xStopRowDanger[i]=1;
+//                }
+//                if(colDanger(pState, i, j, CELL_O)){
+//                    xStopColDanger[i]=1;
+//                }
+//                if(yRows[i]!=0){
+//                   yRows[i]=0;
+//                   --yRowChances;
+//                   //cerr<<"yRowChances: "<<yRowChances<<"\n";
+//                }
+//                if(yCols[j]!=0){
+//                  yCols[j]=0;
+//                  --yColChances;
+//                  //cerr<<"yColChances: "<<yColChances<<"\n";
+//                }
+//                             
+//                int diT = isDiag(i, j);
+//                if(diDanger(pState,i,j,CELL_O)){
+//                    xStopDiDanger[diT]=1;
+//                }
+//                if(diT!=2){
+//                    if(yDi[diT]!=0){
+//                        yDi[diT]=0;
+//                        --yDiChances;
+//                        //cerr<<"yDiChances: "<<yDiChances<<"\n";
+//                    }
+//               }
+//            }
+//            if(pState.at(i,j)==CELL_O){
+//                if(rowDanger(pState, i, j, CELL_X)){
+//                    yStopRowDanger[i]=1;
+//                }
+//                if(colDanger(pState, i, j, CELL_X)){
+//                    yStopColDanger[i]=1;
+//                }
+//                if(xRows[i]!=0){
+//                    xRows[i]=0;
+//                    --xRowChances;
+//                }
+//                if(xCols[j]!=0){
+//                   xCols[j]=0;
+//                    --xColChances; 
+//                }
+//                
+//                int diT = isDiag(i, j);
+//                if(diDanger(pState,i,j,CELL_X)){
+//                    yStopDiDanger[diT]=1;
+//                }
+//                if(diT!=2){
+//                    if(xDi[diT]!=0){
+//                        xDi[diT]=0;
+//                        --xDiChances;
+//                    }
+//                }
+//            }
+//        }
 //    }
-    
-    //Calculate nr rows&&cols&&diag with more than 2 - dead rows&&cols&&diag
-    int good =0;
-    int bad =0;
-    //cerr<<"\nrx, cx, ry, cy \n";
-    for(int k=0;k<4;++k){
-        //Score +1 bara om ensam på rad
-        int rx = xScoreRows[k];
-        int cx = xScoreCols[k];              
-        int ry = yScoreRows[k];
-        int cy = yScoreCols[k];
-        int rxd = xStopRowDanger[k];
-        int cxd = xStopColDanger[k];
-        int ryd = yStopRowDanger[k];
-        int cyd = yStopColDanger[k];
-        
-        
-        //cerr<<" "<<rx<<"  "<<cx<<"  "<<"  "<<ry<<"  "<<cy<<"\n";
-        if(player){
-            if(rx==1){good+=0;}
-            if(cx==1){good+=0;}
-            if(rx==2){good+=5;}
-            if(cx==2){good+=5;}
-            if(rx==3){good+=10;}
-            if(cx==3){good+=10;}
-            if(rx==4){good+=1000;}
-            if(cx==4){good+=1000;}
-            if(rxd==1){good+=100;}
-            if(cxd==1){good+=100;}
-            
-            if(ry==1){bad+=0;}
-            if(cy==1){bad+=0;}
-            if(ry==2){bad+=50;}
-            if(cy==2){bad+=50;}
-            if(ry==3){bad+=100;}
-            if(cy==3){bad+=100;}
-            if(ry==4){bad+=1000;}
-            if(cy==4){bad+=1000;}
-        }else if(!player){
-            if(rx==1){bad+=0;}
-            if(cx==1){bad+=0;}
-            if(rx==2){bad+=50;}
-            if(cx==2){bad+=50;}
-            if(rx==3){bad+=100;}
-            if(cx==3){bad+=100;}
-            if(rx==4){bad+=1000;}
-            if(cx==4){bad+=1000;}
-            
-            if(ry==1){good+=0;}
-            if(cy==1){good+=0;}
-            if(ry==2){good+=5;}
-            if(cy==2){good+=5;}
-            if(ry==3){good+=10;}
-            if(cy==3){good+=10;}
-            if(ry==4){good+=1000;}
-            if(cy==4){good+=1000;}
-            if(ryd==1){good+=100;}
-            if(cyd==1){good+=100;}
-        }          
-    }
-    for(int l=0;l<2;++l){
-        int dx = xScoreDi[l];       
-        int dy = yScoreDi[l];
-        int dxd = xStopDiDanger[l];
-        int dyd = yStopDiDanger[l];
-        //Player X
-        if(player){
-            if(dx==1){good+=1;}
-            if(dx==2){good+=5;}
-            if(dx==3){good+=10;}
-            if(dx==4){good+=1000;}
-            if(dxd==1){good+=100;}
-            
+//    //Score how players are doing
+//    for(int i=0;i<4;++i){
+//        for(int j=0;j<4;++j){          
+//            if(pState.at(i,j)==CELL_X){     
+//                //X ensam på rad/column
+//                if(xRows[i]!=0){xScoreRows[i]+=1;}
+//                if(xCols[j]!=0){xScoreCols[j]+=1;}
+//                //Stoppa motståndare med 3 poäng
+//                
+//                //X Ensam på diagonal
+//                int diT = isDiag(i, j);
+//                if(diT!=2){
+//                    if(xDi[diT]!=0){xScoreDi[diT]+=1;}                   
+//                }                            
+//            }
+//            if(pState.at(i,j)==CELL_O){
+//                //Y ensam på rad/column
+//                if(yRows[i]!=0){yScoreRows[i]+=1;}
+//                if(yCols[j]!=0){yScoreCols[j]+=1;}
+//                //Y ensam på rad/column
+//                int diT = isDiag(i, j);
+//                if(diT!=2){
+//                    if(yDi[diT]!=0){yScoreDi[diT]+=1;}           
+//                }                 
+//            }
+//        }
+//    }
+////    cerr<<"\n xRows: \n";
+////    for(int i=0;i<4;++i){               
+////        cerr<<xRows[i]<<" ";        
+////    }
+////    cerr<<"\n xCols: \n";
+////    for(int i=0;i<4;++i){
+////        cerr<<xCols[i]<<" ";
+////    }
+////    cerr<<"\n yRows: \n";
+////    for(int i=0;i<4;++i){
+////        cerr<<yRows[i]<<" ";
+////    }
+////    cerr<<"\n yCols: \n";
+////    for(int i=0;i<4;++i){
+////        cerr<<yCols[i]<<" ";
+////    }
+////    
+////    for(int i=0;i<2;++i){
+////        cerr<<"\n xDi: \n";
+////        cerr<<xDi[i]<<" ";     
+////    }
+////    cerr<<"\n yDi: \n";
+////    for(int i=0;i<2;++i){
+////        cerr<<yDi[i]<<" ";  
+////    }
+//    
+//    //Calculate nr rows&&cols&&diag with more than 2 - dead rows&&cols&&diag
+//    int good =0;
+//    int bad =0;
+//    //cerr<<"\nrx, cx, ry, cy \n";
+//    for(int k=0;k<4;++k){
+//        //Score +1 bara om ensam på rad
+//        int rx = xScoreRows[k];
+//        int cx = xScoreCols[k];              
+//        int ry = yScoreRows[k];
+//        int cy = yScoreCols[k];
+//        int rxd = xStopRowDanger[k];
+//        int cxd = xStopColDanger[k];
+//        int ryd = yStopRowDanger[k];
+//        int cyd = yStopColDanger[k];
+//        
+//        
+//        //cerr<<" "<<rx<<"  "<<cx<<"  "<<"  "<<ry<<"  "<<cy<<"\n";
+//        if(player){
+//            if(rx==1){good+=0;}
+//            if(cx==1){good+=0;}
+//            if(rx==2){good+=5;}
+//            if(cx==2){good+=5;}
+//            if(rx==3){good+=10;}
+//            if(cx==3){good+=10;}
+//            if(rx==4){good+=1000;}
+//            if(cx==4){good+=1000;}
+//            if(rxd==1){good+=100;}
+//            if(cxd==1){good+=100;}
 //            
-            if(dy==1){bad+=10;}
-            if(dy==2){bad+=50;}
-            if(dy==3){bad+=100;}
-            if(dy==4){bad+=1000;}
-        //Player O
-        }else if(!player){
-            if(dx==1){bad+=10;}
-            if(dx==2){bad+=50;}
-            if(dx==3){bad+=100;}
-            if(dx==4){bad+=1000;}
-
-            if(dy==1){good+=1;}
-            if(dy==2){good+=5;}
-            if(dy==3){good+=10;}
-            if(dy==4){good+=1000;}
-            if(dyd==1){good+=100;}
-        }       
-    }
-    int chancesLeft=0;
-    if(player){
-        chancesLeft = xRowChances+xColChances+xDiChances;
-    }else if(!player){
-        chancesLeft = yRowChances+yColChances+yDiChances;
-    }
+//            if(ry==1){bad+=0;}
+//            if(cy==1){bad+=0;}
+//            if(ry==2){bad+=50;}
+//            if(cy==2){bad+=50;}
+//            if(ry==3){bad+=100;}
+//            if(cy==3){bad+=100;}
+//            if(ry==4){bad+=1000;}
+//            if(cy==4){bad+=1000;}
+//        }else if(!player){
+//            if(rx==1){bad+=0;}
+//            if(cx==1){bad+=0;}
+//            if(rx==2){bad+=50;}
+//            if(cx==2){bad+=50;}
+//            if(rx==3){bad+=100;}
+//            if(cx==3){bad+=100;}
+//            if(rx==4){bad+=1000;}
+//            if(cx==4){bad+=1000;}
+//            
+//            if(ry==1){good+=0;}
+//            if(cy==1){good+=0;}
+//            if(ry==2){good+=5;}
+//            if(cy==2){good+=5;}
+//            if(ry==3){good+=10;}
+//            if(cy==3){good+=10;}
+//            if(ry==4){good+=1000;}
+//            if(cy==4){good+=1000;}
+//            if(ryd==1){good+=100;}
+//            if(cyd==1){good+=100;}
+//        }          
+//    }
+//    for(int l=0;l<2;++l){
+//        int dx = xScoreDi[l];       
+//        int dy = yScoreDi[l];
+//        int dxd = xStopDiDanger[l];
+//        int dyd = yStopDiDanger[l];
+//        //Player X
+//        if(player){
+//            if(dx==1){good+=1;}
+//            if(dx==2){good+=5;}
+//            if(dx==3){good+=10;}
+//            if(dx==4){good+=1000;}
+//            if(dxd==1){good+=100;}
+//            
+////            
+//            if(dy==1){bad+=10;}
+//            if(dy==2){bad+=50;}
+//            if(dy==3){bad+=100;}
+//            if(dy==4){bad+=1000;}
+//        //Player O
+//        }else if(!player){
+//            if(dx==1){bad+=10;}
+//            if(dx==2){bad+=50;}
+//            if(dx==3){bad+=100;}
+//            if(dx==4){bad+=1000;}
+//
+//            if(dy==1){good+=1;}
+//            if(dy==2){good+=5;}
+//            if(dy==3){good+=10;}
+//            if(dy==4){good+=1000;}
+//            if(dyd==1){good+=100;}
+//        }       
+//    }
+//    int chancesLeft=0;
+//    if(player){
+//        chancesLeft = xRowChances+xColChances+xDiChances;
+//    }else if(!player){
+//        chancesLeft = yRowChances+yColChances+yDiChances;
+//    }
 
    // cerr<<"\n good - bad \n";
     //cerr<<good-bad<<"\n";
@@ -438,33 +427,27 @@ int gamma(bool player, const GameState &pState){
     //cerr<<chancesLeft<<"\n";
     
     //19 kattis
-//    if(pState.isXWin()){
-//        return 2;
-//    }
-//    else if(pState.isOWin()){
-//        return 0;
-//    }
-//    else if(pState.isDraw()){
-//        return 1;
-//    }
-    int sum;
-    for(int i=0;i<4;++i){
-        sum+=xNARows[i]+xNACols[i];
+    if(pState.isXWin()){
+        return 2;
     }
-    for(int i=0;i<2;++i){
-        sum+=xNADi[i];
+    else if(pState.isOWin()){
+        return 0;
     }
-    return sum;
-    //18 i kattis
+    else{
+        return 1;
+    }
+    
+
+    //6 i kattis
     //return good-bad;
-            //18 i kattis
-            //+(chancesLeft*50);
+    //+(chancesLeft*50);
     }
 
-int minMax(const GameState &pState, bool playerBool, int alfa, int beta){
-    //cerr<<"minmax: "<<" \n";
+//Spelare A=1, Spelare B=0
+int minMax(const GameState &pState, bool playerBool, int depth, int alfa, int beta){
     int v;
-    if(mu(pState).size()==0){
+    //if(depth==0||mu(pState).size()==0){
+    if(pState.isEOG()){
         v= (gamma(playerBool, pState));
         //cerr<<"gamma: "<<v<<" \n";
         //cerr<<"player: "<<player<<" \n";
@@ -474,10 +457,10 @@ int minMax(const GameState &pState, bool playerBool, int alfa, int beta){
         vector<GameState> States1 = mu(pState);
         for(int i=0;i<States1.size();++i){
             GameState child = States1[i];
-            v = max(v,minMax(child, false, alfa, beta));
+            v = max(v,minMax(child, false, depth-1, alfa, beta));
             alfa = max(alfa, v);
             if(beta<=alfa){
-               ++pruning;
+               //++pruning;
                 break;
             }
         }
@@ -487,11 +470,11 @@ int minMax(const GameState &pState, bool playerBool, int alfa, int beta){
         vector<GameState> States2 = mu(pState);
         for(int j=0;j<States2.size();++j){
             GameState child = States2[j];
-            v = min(v, minMax(child, true, alfa, beta));
+            v = min(v, minMax(child, true, depth-1, alfa, beta));
             //cerr<<"min; "<<v<<" \n";
             beta = min(beta, v);
             if(beta<=alfa){
-                ++pruning;
+               // ++pruning;
                 break;
             }
         }
@@ -527,14 +510,16 @@ GameState Player::play(const GameState &pState,const Deadline &pDue)
      */
     //return lNextStates[rand() % lNextStates.size()];
     int max = 0;
+    int stateIndex=0;
     for(int i=0;i<lNextStates.size();++i){
-        //cerr<<"playNExt: "<<" \n";
-        int newMax = minMax(lNextStates[i], true, 0, 0);
+        
+        int newMax = minMax(lNextStates[i], false, INT_MAX, INT_MIN, INT_MAX);
         if(newMax>max){
-            max = i;
+            max=newMax;
+            stateIndex = i;
         }
     }
-    return lNextStates[max];
+    return lNextStates[stateIndex];
 }
 
 /*namespace TICTACTOE*/ }
